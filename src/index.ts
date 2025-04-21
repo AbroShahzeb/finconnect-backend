@@ -5,6 +5,7 @@ import "colors";
 
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 
 import authRoutes from "./routes/auth.route.js";
 import globalErrorHandler from "./controllers/error.controller.js";
@@ -16,6 +17,12 @@ connectDB();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(
+  cors({
+    origin: process.env.CORS_ORIGIN,
+  })
+);
 
 app.use(cookieParser());
 

@@ -8,8 +8,11 @@ import cookieParser from "cookie-parser";
 
 import authRoutes from "./routes/auth.route.js";
 import globalErrorHandler from "./controllers/error.controller.js";
+import { connectDB } from "./utils/db.js";
 
 const app = express();
+
+connectDB();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));

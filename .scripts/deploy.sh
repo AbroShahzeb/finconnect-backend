@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-echo "Deployment started ..."
+echo "Deployment started..."
 
 
 # Make sure NVM is available

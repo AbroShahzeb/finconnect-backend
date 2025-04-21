@@ -8,7 +8,7 @@ const app = express();
 app.get("/", (req, res, next) => {
   res.json({
     status: "success",
-    message: "Hello from the finconnect backend API. Test",
+    message: "Hello from the finconnect backend API.",
   });
 });
 

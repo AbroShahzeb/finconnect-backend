@@ -3,7 +3,18 @@ import { configDotenv } from "dotenv";
 configDotenv();
 import "colors";
 
+import bodyParser from "body-parser";
+import cookieParser from "cookie-parser";
+
+import authRoutes from "./routes/auth.route.js";
+import globalErrorHandler from "./controllers/error.controller.js";
+
 const app = express();
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(cookieParser());
 
 app.get("/", (req, res, next) => {
   res.json({
@@ -11,6 +22,10 @@ app.get("/", (req, res, next) => {
     message: "Hello world...",
   });
 });
+
+app.use("/api/auth", authRoutes);
+
+app.use(globalErrorHandler);
 
 app.listen(process.env.PORT || 3007, () => {
   console.log(

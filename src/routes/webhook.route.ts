@@ -46,6 +46,10 @@ router.post(
         // Create a new subscription document
         try {
           const userId = "680767e1f39d96047a0f1ab0"; // Assuming `req.user` contains the authenticated user
+          const reqUser = req.user as RequestUser;
+          const _userId = reqUser.id;
+          console.log(reqUser, "reqUser");
+          console.log(_userId, "userId");
           const newSubscription = await Subscription.create({
             name: "Subscription Name", // Replace with actual name if available
             price: 0, // Replace with actual price if available

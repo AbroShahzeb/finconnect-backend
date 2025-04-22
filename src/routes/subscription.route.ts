@@ -1,7 +1,7 @@
 import { Router } from "express";
 import {
-  createPaymentIntent,
   createSubscription,
+  createSubscriptionStripe,
   getSubscription,
 } from "../controllers/subscription.controller.js";
 import { authorize, restrictTo } from "../middlewares/auth.middleware.js";
@@ -9,7 +9,7 @@ import { authorize, restrictTo } from "../middlewares/auth.middleware.js";
 const router = Router();
 
 router.post("/", createSubscription);
-router.get("/payment", authorize, createPaymentIntent);
+router.post("/payment", authorize, createSubscriptionStripe);
 router.get("/:id", authorize, restrictTo("admin"), getSubscription);
 
 export default router;

@@ -56,16 +56,20 @@ export const getSubscription = catchAsync(async (req, res, next) => {
   res.status(200).json({ status: "success", data: subscriptions });
 });
 
-export const createPaymentIntent = catchAsync(async (req, res, next) => {
+export const createSubscriptionStripe = catchAsync(async (req, res, next) => {
+  const { name, price } = req.body;
+  console.log("Request body:", req.body); // Debugging line
   const reqUser = req.user as RequestUser;
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ["card"],
     mode: "subscription",
     metadata: {
       userId: reqUser.id,
+      subscriptionName: name,
+      subscriptionPrice: price,
     },
-    success_url: "https://finconnect.shahzebabro.com",
-    cancel_url: "https://finconnect.shahzebabro.com/login",
+    success_url: "https://finconnect.shahzebabro.com/dashboard",
+    cancel_url: "https://finconnect.shahzebabro.com/pricing",
     line_items: [
       {
         price: "price_1RGf45RDr0agcdVyepPBm1MD",

@@ -41,7 +41,11 @@ router.post(
         const session = event.data.object as Stripe.Checkout.Session;
 
         const userId = session.metadata.userId as string;
-        console.log("userId", userId);
+        const subscriptionName = session.metadata.subscriptionName as string;
+        const subscriptionPrice = session.metadata.subscriptionPrice as string;
+
+        console.log("subscriptionName", subscriptionName);
+        console.log("subscriptionPrice", subscriptionPrice);
 
         // Save active subscription logic
         const customerId = session.customer as string;
@@ -50,8 +54,8 @@ router.post(
         // Create a new subscription document
         try {
           const newSubscription = await Subscription.create({
-            name: "Subscription Name", // Replace with actual name if available
-            price: 0, // Replace with actual price if available
+            name: subscriptionName, // Replace with actual name if available
+            price: +subscriptionPrice, // Replace with actual price if available
             frequency: "monthly", // Replace with actual frequency if available
             paymentMethod: "card", // Replace with actual payment method if available
             status: "active",

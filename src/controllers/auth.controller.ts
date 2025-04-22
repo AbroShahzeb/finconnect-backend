@@ -169,7 +169,7 @@ export const signInWithOAuth = catchAsync(async (req, res, next) => {
 
   session.commitTransaction();
 
-  signToken(existingAccount._id, res);
+  signToken(existingUser._id, res);
   res.redirect(`${process.env.FRONTEND_URL}/login`);
   res.json({ message: "signed in", data: existingUser });
 });

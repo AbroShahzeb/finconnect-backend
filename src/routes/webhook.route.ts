@@ -7,6 +7,7 @@ import stripe from "../utils/stripe.js"; // your stripe instance
 import Subscription from "../models/subscription.model.js"; // Import the Subscription model
 import { configDotenv } from "dotenv";
 import { Types } from "mongoose";
+import { RequestUser } from "../controllers/auth.controller.js";
 configDotenv();
 
 const router = express.Router();
@@ -44,7 +45,8 @@ router.post(
 
         // Create a new subscription document
         try {
-          const userId = req.user.id; // Assuming `req.user` contains the authenticated user
+          const reqUser = req.user as RequestUser;
+          const userId = reqUser.id; // Assuming `req.user` contains the authenticated user
           const newSubscription = await Subscription.create({
             name: "Subscription Name", // Replace with actual name if available
             price: 0, // Replace with actual price if available

@@ -19,6 +19,8 @@ const app = express();
 
 connectDB();
 
+app.use(webhookRoutes);
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -42,7 +44,6 @@ app.get("/", (req, res, next) => {
 
 app.use("/api/auth", authRoutes);
 app.use("/api/subscriptions", subscriptionRoutes);
-app.use(webhookRoutes);
 
 app.use(globalErrorHandler);
 

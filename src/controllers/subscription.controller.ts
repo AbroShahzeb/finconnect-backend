@@ -57,9 +57,13 @@ export const getSubscription = catchAsync(async (req, res, next) => {
 });
 
 export const createPaymentIntent = catchAsync(async (req, res, next) => {
+  const reqUser = req.user as RequestUser;
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ["card"],
     mode: "subscription",
+    metadata: {
+      userId: reqUser.id,
+    },
     success_url: "https://finconnect.shahzebabro.com",
     cancel_url: "https://finconnect.shahzebabro.com/login",
     line_items: [
@@ -70,5 +74,5 @@ export const createPaymentIntent = catchAsync(async (req, res, next) => {
     ],
   });
 
-  res.redirect(session.url);
+  res.status(200).json({ url: session.url });
 });

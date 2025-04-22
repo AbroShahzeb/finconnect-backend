@@ -57,9 +57,23 @@ export const getSubscription = catchAsync(async (req, res, next) => {
 });
 
 export const createSubscriptionStripe = catchAsync(async (req, res, next) => {
-  const { name, price } = req.body;
-  console.log("Request body:", req.body); // Debugging line
+  const { name, price } = req.body; // `name` is the subscription name
   const reqUser = req.user as RequestUser;
+
+  // Map subscription names to Stripe price IDs
+  const priceMapping: Record<string, string> = {
+    starter: "price_1RGl3sRDr0agcdVyLHZMW8vZ", // Replace with actual Stripe price ID for "starter"
+    pro: "price_1RGf45RDr0agcdVyepPBm1MD", // Replace with actual Stripe price ID for "pro"
+    business: "price_1RGf4TRDr0agcdVy2q3a3Kh8", // Replace with actual Stripe price ID for "business"
+  };
+
+  // Validate the subscription name
+  const stripePriceId = priceMapping[name.toLowerCase()];
+  if (!stripePriceId) {
+    return next(new AppError("Invalid subscription name provided", 400));
+  }
+
+  // Create a Stripe checkout session
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ["card"],
     mode: "subscription",
@@ -72,7 +86,7 @@ export const createSubscriptionStripe = catchAsync(async (req, res, next) => {
     cancel_url: "https://finconnect.shahzebabro.com/pricing",
     line_items: [
       {
-        price: "price_1RGf45RDr0agcdVyepPBm1MD",
+        price: stripePriceId, // Dynamically set the price ID based on the subscription name
         quantity: 1,
       },
     ],

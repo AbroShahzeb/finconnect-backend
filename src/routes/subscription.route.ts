@@ -10,6 +10,6 @@ const router = Router();
 
 router.post("/", createSubscription);
 router.post("/payment", authorize, createSubscriptionStripe);
-router.get("/:id", authorize, restrictTo("admin"), getSubscription);
+router.get("/:id", authorize, getSubscription);
 
 export default router;

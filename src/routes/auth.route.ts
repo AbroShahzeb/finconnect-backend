@@ -1,5 +1,9 @@
 import { Router } from "express";
-import { login, register } from "../controllers/auth.controller.js";
+import {
+  login,
+  register,
+  signInWithOAuth,
+} from "../controllers/auth.controller.js";
 import passport from "passport";
 
 const router = Router();
@@ -18,10 +22,7 @@ router.get(
     session: false,
     failureRedirect: "/login",
   }),
-  (req, res) => {
-    console.log("Request user", req.user);
-    res.status(200).json("Signed in successfully");
-  }
+  signInWithOAuth
 );
 
 export default router;

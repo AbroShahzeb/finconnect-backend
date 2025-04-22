@@ -8,6 +8,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 
 import authRoutes from "./routes/auth.route.js";
+import subscriptionRoutes from "./routes/subscription.route.js";
 import globalErrorHandler from "./controllers/error.controller.js";
 import { connectDB } from "./utils/db.js";
 import passport from "passport";
@@ -39,6 +40,7 @@ app.get("/", (req, res, next) => {
 });
 
 app.use("/api/auth", authRoutes);
+app.use("/api/subscriptions", subscriptionRoutes);
 
 app.use(globalErrorHandler);
 

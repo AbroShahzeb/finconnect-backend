@@ -8,14 +8,15 @@ import {
 } from "../utils/validations.js";
 import { Response } from "express";
 import jwt from "jsonwebtoken";
-import mongoose, { mongo, Types } from "mongoose";
+import mongoose, { Types } from "mongoose";
 import Account from "../models/account.model.js";
 
-type RequestUser = {
+export type RequestUser = {
   id: string;
   name: string;
   email: string;
   picture: string;
+  role: string;
 };
 
 const signToken = (id: Types.ObjectId, res: Response) => {

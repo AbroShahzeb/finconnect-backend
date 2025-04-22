@@ -5,6 +5,8 @@ import Stripe from "stripe";
 import { buffer } from "micro";
 import stripe from "../utils/stripe.js"; // your stripe instance
 import Subscription from "../models/subscription.model.js";
+import { configDotenv } from "dotenv";
+configDotenv();
 
 const router = express.Router();
 
@@ -15,15 +17,17 @@ router.post(
     const sig = req.headers["stripe-signature"]!;
     let event: Stripe.Event;
 
+    const buf = req.body as Buffer;
+
     try {
       event = stripe.webhooks.constructEvent(
-        req.body,
+        buf,
         sig,
         process.env.STRIPE_WEBHOOK_SECRET!
       );
     } catch (err) {
       console.error("Webhook signature verification failed.", err);
-      return res.status(400).send(`Webhook Error: ${err.message}`);
+      res.status(400).send(`Webhook Error: ${err.message}`);
     }
 
     // 🔍 Handle the event

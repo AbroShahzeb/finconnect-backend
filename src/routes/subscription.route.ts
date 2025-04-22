@@ -8,6 +8,6 @@ import { authorize, restrictTo } from "../middlewares/auth.middleware.js";
 const router = Router();
 
 router.post("/", createSubscription);
-router.get("/:id", authorize, restrictTo("developer"), getSubscription);
+router.get("/:id", authorize, restrictTo("admin"), getSubscription);
 
 export default router;

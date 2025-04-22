@@ -7,6 +7,8 @@ import { RequestUser } from "../controllers/auth.controller.js";
 export const authorize = catchAsync(async (req, res, next) => {
   const token = req.cookies?.jwt;
 
+  console.log("Token:", token); // Debugging line
+
   if (!token) {
     return next(
       new AppError("You are not logged in. Please log in to continue.", 401)

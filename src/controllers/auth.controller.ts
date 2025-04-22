@@ -24,6 +24,8 @@ const signToken = (id: Types.ObjectId, res: Response) => {
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
 
+  console.log("Token:", token); // Debugging line
+
   res.cookie("jwt", token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",

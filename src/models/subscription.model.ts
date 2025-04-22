@@ -9,6 +9,8 @@ export interface ISubscription {
   startDate?: Date;
   renewalDate?: Date;
   userId: Types.ObjectId;
+  subscriptionId: string; // New field
+  customerId: string; // New field
 }
 
 export interface ISubscriptionDoc extends ISubscription, Document {}
@@ -59,6 +61,14 @@ const subscriptionSchema = new Schema<ISubscription>(
       ref: "User",
       required: true,
       index: true,
+    },
+    subscriptionId: {
+      type: String,
+      required: true, // New field
+    },
+    customerId: {
+      type: String,
+      required: true, // New field
     },
   },
   { timestamps: true }

@@ -4,8 +4,9 @@ import express from "express";
 import Stripe from "stripe";
 import { buffer } from "micro";
 import stripe from "../utils/stripe.js"; // your stripe instance
-// import Subscription from "../models/subscription.model.js";
+import Subscription from "../models/subscription.model.js"; // Import the Subscription model
 import { configDotenv } from "dotenv";
+import { Types } from "mongoose";
 configDotenv();
 
 const router = express.Router();
@@ -41,10 +42,29 @@ router.post(
         const customerId = session.customer as string;
         const subscriptionId = session.subscription as string;
 
-        // Optionally update your database
-        console.log(`✅ Subscription successful: ${subscriptionId}`);
+        // Create a new subscription document
+        try {
+          const userId = req.user.id; // Assuming `req.user` contains the authenticated user
+          const newSubscription = await Subscription.create({
+            name: "Subscription Name", // Replace with actual name if available
+            price: 0, // Replace with actual price if available
+            frequency: "monthly", // Replace with actual frequency if available
+            paymentMethod: "card", // Replace with actual payment method if available
+            status: "active",
+            startDate: new Date(),
+            renewalDate: new Date(
+              new Date().setMonth(new Date().getMonth() + 1)
+            ), // Example: 1 month later
+            userId,
+            subscriptionId,
+            customerId,
+          });
 
-        // TODO: Mark user subscription active in DB using metadata or customer email
+          console.log(`✅ Subscription created: ${newSubscription._id}`);
+        } catch (err) {
+          console.error("Error creating subscription document:", err);
+        }
+
         break;
       }
 

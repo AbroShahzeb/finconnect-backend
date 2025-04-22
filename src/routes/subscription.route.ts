@@ -9,7 +9,7 @@ import { authorize, restrictTo } from "../middlewares/auth.middleware.js";
 const router = Router();
 
 router.post("/", createSubscription);
-router.get("/:id", authorize, restrictTo("admin"), getSubscription);
 router.get("/payment", createPaymentIntent);
+router.get("/:id", authorize, restrictTo("admin"), getSubscription);
 
 export default router;

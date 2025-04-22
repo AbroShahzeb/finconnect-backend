@@ -10,6 +10,8 @@ configDotenv();
 
 const router = express.Router();
 
+console.log("webhook api key", process.env.STRIPE_WEBHOOK_SECRET);
+
 router.post(
   "/webhook",
   express.raw({ type: "application/json" }),

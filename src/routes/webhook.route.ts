@@ -4,7 +4,7 @@ import express from "express";
 import Stripe from "stripe";
 import { buffer } from "micro";
 import stripe from "../utils/stripe.js"; // your stripe instance
-import Subscription from "../models/subscription.model.js";
+// import Subscription from "../models/subscription.model.js";
 import { configDotenv } from "dotenv";
 configDotenv();
 

@@ -27,6 +27,7 @@ const signToken = (id: Types.ObjectId, res: Response) => {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
+    domain: ".shahzebabro.com",
     maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
   });
 };

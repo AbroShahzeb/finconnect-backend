@@ -10,6 +10,8 @@ import cors from "cors";
 import authRoutes from "./routes/auth.route.js";
 import globalErrorHandler from "./controllers/error.controller.js";
 import { connectDB } from "./utils/db.js";
+import passport from "passport";
+import "./config/passport.js";
 
 const app = express();
 
@@ -24,6 +26,8 @@ app.use(
     credentials: true,
   })
 );
+
+app.use(passport.initialize());
 
 app.use(cookieParser());
 

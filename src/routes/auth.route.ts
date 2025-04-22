@@ -1,15 +1,18 @@
 import { Router } from "express";
 import {
+  getMe,
   login,
   register,
   signInWithOAuth,
 } from "../controllers/auth.controller.js";
 import passport from "passport";
+import { authorize } from "../middlewares/auth.middleware.js";
 
 const router = Router();
 
 router.post("/login", login);
 router.post("/register", register);
+router.post("/me", authorize, getMe);
 
 router.get(
   "/google",

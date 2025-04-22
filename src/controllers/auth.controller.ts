@@ -74,6 +74,21 @@ export const login = catchAsync(async (req, res, next) => {
   });
 });
 
+export const getMe = catchAsync(async (req, res, next) => {
+  const reqUser = req.user as RequestUser;
+  const userId = reqUser.id;
+  const user = await User.findById(userId).select("-password -__v");
+
+  if (!user) {
+    return next(new AppError("No user found", 404));
+  }
+
+  res.status(200).json({
+    status: "success",
+    data: user,
+  });
+});
+
 export const register = catchAsync(async (req, res, next) => {
   const validationResults = RegisterRequestBodySchema.safeParse(req.body);
 
@@ -172,5 +187,5 @@ export const signInWithOAuth = catchAsync(async (req, res, next) => {
   session.commitTransaction();
 
   signToken(existingUser._id, res);
-  res.redirect(`${process.env.FRONTEND_URL}/login`);
+  res.redirect(`${process.env.FRONTEND_URL}/dashboard`);
 });

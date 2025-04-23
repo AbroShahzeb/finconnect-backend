@@ -192,3 +192,18 @@ export const signInWithOAuth = catchAsync(async (req, res, next) => {
   signToken(existingUser._id, res);
   res.redirect(`${process.env.FRONTEND_URL}/dashboard`);
 });
+
+export const logout = catchAsync(async (req, res) => {
+  res.clearCookie("jwt", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    domain:
+      process.env.NODE_ENV === "production" ? ".shahzebabro.com" : undefined,
+  });
+
+  res.status(200).json({
+    status: "success",
+    message: "Logged out successfully",
+  });
+});

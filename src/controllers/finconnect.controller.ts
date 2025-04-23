@@ -35,6 +35,14 @@ export const getBalance = catchAsync(async (req, res) => {
 
 export const transferFunds = catchAsync(async (req, res, next) => {
   const { to, from, amount, title, description } = req.body;
+  const reqUser = req.user as RequestUser;
+  const userId = reqUser.id.toString();
+
+  if (userId !== from) {
+    return next(
+      new AppError("You are not authorized to transfer from this account", 403)
+    );
+  }
 
   const ToAccount = await User.findById(to);
   if (!ToAccount) {
@@ -54,13 +62,13 @@ export const transferFunds = catchAsync(async (req, res, next) => {
     return next(new AppError("Amount must be greater than zero", 400));
   }
 
-  if (FromAccount.balance < amount) {
+  if (FromAccount.balance < +amount) {
     return next(new AppError("Insufficient funds", 400));
   }
 
   // Update balances
-  FromAccount.balance -= amount;
-  ToAccount.balance += amount;
+  FromAccount.balance -= parseFloat(amount);
+  ToAccount.balance += parseFloat(amount);
 
   await FromAccount.save();
   await ToAccount.save();

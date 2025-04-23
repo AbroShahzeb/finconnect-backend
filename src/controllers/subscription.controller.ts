@@ -53,7 +53,7 @@ export const getSubscription = catchAsync(async (req, res, next) => {
 
   const subscriptions = await Subscription.findOne({
     userId: req.params.id,
-  }).select("name price -_id");
+  }).select("name price -_id status");
 
   res.status(200).json({ status: "success", data: subscriptions });
 });
@@ -95,4 +95,30 @@ export const createSubscriptionStripe = catchAsync(async (req, res, next) => {
   });
 
   res.status(200).json({ url: session.url });
+});
+
+export const cancelSubscription = catchAsync(async (req, res, next) => {
+  const reqUser = req.user as RequestUser;
+
+  // 1. Find the user's active subscription
+  const subscription = await Subscription.findOne({
+    userId: reqUser.id,
+    status: "active",
+  });
+
+  if (!subscription) {
+    return next(new AppError("No active subscription found", 404));
+  }
+
+  // 2. Cancel the subscription on Stripe
+  await stripe.subscriptions.cancel(subscription.subscriptionId); // This cancels it immediately
+
+  // 3. Update your DB
+  subscription.status = "cancelled";
+  await subscription.save();
+
+  res.status(200).json({
+    status: "success",
+    message: "Subscription canceled successfully",
+  });
 });

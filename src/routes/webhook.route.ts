@@ -44,25 +44,38 @@ router.post(
         const subscriptionName = session.metadata.subscriptionName as string;
         const subscriptionPrice = session.metadata.subscriptionPrice as string;
 
-        console.log("subscriptionName", subscriptionName);
-        console.log("subscriptionPrice", subscriptionPrice);
-
         // Save active subscription logic
         const customerId = session.customer as string;
         const subscriptionId = session.subscription as string;
 
-        // Create a new subscription document
         try {
+          // Check if the user already has an active subscription
+          const existingSubscription = await Subscription.findOne({
+            userId,
+            status: "active",
+          });
+
+          if (existingSubscription) {
+            console.error(
+              `User ${userId} already has an active subscription: ${existingSubscription._id}`
+            );
+            res.status(400).json({
+              status: "error",
+              message: "You already have an active subscription.",
+            });
+          }
+
+          // Create a new subscription document
           const newSubscription = await Subscription.create({
-            name: subscriptionName, // Replace with actual name if available
-            price: +subscriptionPrice, // Replace with actual price if available
-            frequency: "monthly", // Replace with actual frequency if available
-            paymentMethod: "card", // Replace with actual payment method if available
+            name: subscriptionName,
+            price: +subscriptionPrice,
+            frequency: "monthly",
+            paymentMethod: "card",
             status: "active",
             startDate: new Date(),
             renewalDate: new Date(
               new Date().setMonth(new Date().getMonth() + 1)
-            ), // Example: 1 month later
+            ),
             userId,
             subscriptionId,
             customerId,
@@ -71,6 +84,10 @@ router.post(
           console.log(`✅ Subscription created: ${newSubscription._id}`);
         } catch (err) {
           console.error("Error creating subscription document:", err);
+          res.status(500).json({
+            status: "error",
+            message: "Internal server error while creating subscription.",
+          });
         }
 
         break;

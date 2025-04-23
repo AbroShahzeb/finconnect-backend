@@ -51,7 +51,9 @@ export const getSubscription = catchAsync(async (req, res, next) => {
     return next(new AppError("You are not the owner of this account", 401));
   }
 
-  const subscriptions = await Subscription.find({ userId: req.params.id });
+  const subscriptions = await Subscription.findOne({
+    userId: req.params.id,
+  }).select("name price -_id");
 
   res.status(200).json({ status: "success", data: subscriptions });
 });

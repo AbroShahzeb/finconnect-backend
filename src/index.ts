@@ -10,6 +10,7 @@ import cors from "cors";
 import authRoutes from "./routes/auth.route.js";
 import webhookRoutes from "./routes/webhook.route.js";
 import subscriptionRoutes from "./routes/subscription.route.js";
+import finConnectRoutes from "./routes/finconnect.route.js";
 import globalErrorHandler from "./controllers/error.controller.js";
 import { connectDB } from "./utils/db.js";
 import passport from "passport";
@@ -42,6 +43,7 @@ app.get("/", (req, res, next) => {
   });
 });
 
+app.use("/api", finConnectRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/subscriptions", subscriptionRoutes);
 

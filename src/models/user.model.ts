@@ -5,6 +5,7 @@ interface IUser {
   email: string;
   image?: string;
   role?: "admin" | "developer";
+  balance?: number;
 }
 
 export interface IUserDoc extends IUser, Document {}
@@ -27,6 +28,10 @@ const userSchema = new Schema<IUser>({
   },
   image: {
     type: String,
+  },
+  balance: {
+    type: Number,
+    default: 0,
   },
 });
 

@@ -3,6 +3,10 @@ import User from "../models/user.model.js";
 import AppError from "../utils/appError.js";
 import catchAsync from "../utils/catchAsync.js";
 import { RequestUser } from "../controllers/auth.controller.js";
+import Subscription, {
+  ISubscriptionDoc,
+} from "../models/subscription.model.js";
+import { Request } from "express";
 
 export const authorize = catchAsync(async (req, res, next) => {
   const token = req.cookies?.jwt;
@@ -45,3 +49,27 @@ export const restrictTo = (...allowedRoles: ("admin" | "developer")[]) => {
     next();
   };
 };
+
+export const checkSubscription = catchAsync(async (req, res, next) => {
+  const user = req.user as RequestUser;
+
+  if (!user) {
+    return next(new AppError("You are not logged in", 401));
+  }
+
+  // Check if the user has an active subscription
+  const activeSubscription = await Subscription.findOne({
+    userId: user.id,
+    status: "active",
+  });
+
+  if (!activeSubscription) {
+    return next(new AppError("You do not have an active subscription.", 403));
+  }
+
+  // Attach subscription details to the request object (optional)
+  (req as Request & { subscription?: ISubscriptionDoc }).subscription =
+    activeSubscription;
+
+  next();
+});
